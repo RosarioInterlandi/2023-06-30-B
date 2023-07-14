@@ -155,5 +155,91 @@ public class BaseballDAO {
 		}
 		return null;
 	}
+	public List<String> getAllTeamName(){
+		String sql = "SELECT DISTINCT t.name "
+				+ "FROM teams t "
+				+ "ORDER BY t.name ASC ";	
+		List<String> result = new ArrayList<String>();
+
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				result.add(rs.getString("name"));
+			}
+
+			conn.close();
+			return result;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Errore connessione al database");
+			throw new RuntimeException("Error Connection Database");
+		}
+		
+	}
+	
+	public List<Integer> getVertici(String nomeTeam){
+		String sql= "SELECT t.year "
+				+ "FROM teams t "
+				+ "WHERE t.name = ? "
+				+ "ORDER BY t.year ASC ";
+		List<Integer> result = new ArrayList<>();
+		
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, nomeTeam);
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				result.add(rs.getInt("year"));
+			}
+
+			conn.close();
+			return result;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Errore connessione al database");
+			throw new RuntimeException("Error Connection Database");
+		}
+		
+	}
+	public Integer getSalaryTeamYear(Integer anno, String name){
+		String sql = "SELECT SUM( s.salary) AS salarioTeam  "
+				+ "FROM teams t,salaries s, people p  "
+				+ "WHERE t.year = s.year "
+				+ "AND t.year = ? "
+				+ "AND t.name = ? "
+				+ "AND s.playerID = p.playerID "
+				+"AND s.teamID = t.ID ";
+		int result = 0;
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, anno);
+			st.setString(2, name);
+			ResultSet rs = st.executeQuery();
+			while (rs.next()) {
+				result = rs.getInt("salarioTeam");
+			}
+
+			conn.close();
+			return result;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Errore connessione al database");
+			throw new RuntimeException("Error Connection Database");
+		}
+
+		
+	}
+
+	
+		
 
 }

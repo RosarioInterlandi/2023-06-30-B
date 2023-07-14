@@ -11,8 +11,11 @@ public class TestBaseballDAO {
 		BaseballDAO dao = new BaseballDAO();
 
 		List<People> players = dao.readAllPlayers();
-		
-		System.out.println(players.size());
+		List<Integer> v = dao.getVertici("Chicago Cubs");
+		System.out.println(v.size());
+		int ciao =dao.getSalaryTeamYear(2000, "Chicago Cubs");
+		int mondo=dao.getSalaryTeamYear(1999, "Chicago Cubs");
+		System.out.println(Math.abs(ciao - mondo));
 	}
 
 }
